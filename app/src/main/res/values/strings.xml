@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">521-522</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="registration">Registration</string>
+    <string name="fileEx">Error in openning file</string>
+    <string name="okFileWrite">Successful</string>
+    <string name="okLogin">Login Successful</string>
+    <string name="loginFail">Login or password is fail</string>
+    <string name="saveEx">Use External folder</string>
+</resources>
