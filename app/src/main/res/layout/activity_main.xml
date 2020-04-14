@@ -24,7 +24,7 @@
         android:layout_margin="30dp"
         android:ems="10"
         android:hint="@string/password"
-        android:inputType="textPersonName" />
+        android:inputType="textPassword" />
 
     <CheckBox
         android:id="@+id/boxExternal"

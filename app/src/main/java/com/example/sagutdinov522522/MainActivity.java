@@ -25,8 +25,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 public class MainActivity extends AppCompatActivity {
-    private final static String USERS_FILE_NAME="users.txt";
-    private final static String BOX_KEY="box";
+    private final static String USERS_FILE_NAME = "users.txt";
+    private final static String BOX_KEY = "box";
     SharedPreferences shared;
     File source;
 
@@ -37,48 +37,47 @@ public class MainActivity extends AppCompatActivity {
         init();
     }
 
-    private void init(){
+    private void init() {
         source = new File(this.getExternalFilesDir(null), "source.txt");
-        shared=getPreferences(MODE_PRIVATE);
+        shared = getPreferences(MODE_PRIVATE);
 
-        final EditText login=findViewById(R.id.login);
-        final EditText password=findViewById(R.id.password);
-        final CheckBox boxExternal=findViewById(R.id.boxExternal);
+        final EditText login = findViewById(R.id.login);
+        final EditText password = findViewById(R.id.password);
+        final CheckBox boxExternal = findViewById(R.id.boxExternal);
 
-        if(shared.contains(BOX_KEY)){
-            boxExternal.setChecked(shared.getBoolean(BOX_KEY,false));
+        if (shared.contains(BOX_KEY)) {
+            boxExternal.setChecked(shared.getBoolean(BOX_KEY, false));
         }
 
         boxExternal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SharedPreferences.Editor ed=shared.edit();
-                ed.putBoolean(BOX_KEY,isChecked);
-                ed.commit();
+                shared.edit()
+                        .putBoolean(BOX_KEY, isChecked)
+                        .apply();
             }
         });
 
-        Button btnLogin=findViewById(R.id.btnLogin);
+        Button btnLogin = findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean loginSuccess=false;
+                boolean loginSuccess = false;
                 String inName = login.getText().toString();
                 String inPassword = password.getText().toString();
-                if(boxExternal.isChecked()){
-                    try(FileReader fromSource = new FileReader(source)) {
+                if (boxExternal.isChecked()) {
+                    try (FileReader fromSource = new FileReader(source)) {
                         BufferedReader br = new BufferedReader(fromSource);
-                        loginSuccess=findUser(br,inName,inPassword);
-                    }catch (IOException e){
+                        loginSuccess = findUser(br, inName, inPassword);
+                    } catch (IOException e) {
                         Toast.makeText(getApplicationContext(), getString(R.string.fileEx),
                                 Toast.LENGTH_LONG).show();
                     }
-                }else {
-                    try {
-                        FileInputStream streamInUsers = openFileInput(USERS_FILE_NAME);
-                        InputStreamReader ReadFromUsers = new InputStreamReader(streamInUsers);
-                        BufferedReader brUsers = new BufferedReader(ReadFromUsers);
-                        loginSuccess=findUser(brUsers,inName,inPassword);
+                } else {
+                    try (FileInputStream streamInUsers = openFileInput(USERS_FILE_NAME);
+                         InputStreamReader ReadFromUsers = new InputStreamReader(streamInUsers);
+                         BufferedReader brUsers = new BufferedReader(ReadFromUsers)) {
+                        loginSuccess = findUser(brUsers, inName, inPassword);
                         brUsers.close();
                     } catch (IOException e) {
                         Toast.makeText(getApplicationContext(), getString(R.string.fileEx),
@@ -91,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        Button btnRegistration=findViewById(R.id.btnRegistration);
+        Button btnRegistration = findViewById(R.id.btnRegistration);
         btnRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,20 +98,19 @@ public class MainActivity extends AppCompatActivity {
                 if (boxExternal.isChecked()) {
                     try (FileWriter toSource = new FileWriter(source, true)) {
                         toSource.append(user);
-                        toSource.close();
                         Toast.makeText(getApplicationContext(), getString(R.string.okFileWrite),
                                 Toast.LENGTH_LONG).show();
                     } catch (IOException e) {
-                        Toast.makeText(getApplicationContext(),getString(R.string.fileEx),
+                        Toast.makeText(getApplicationContext(), getString(R.string.fileEx),
                                 Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    try {
-                        FileOutputStream streamToLogins = openFileOutput(USERS_FILE_NAME, MODE_PRIVATE);
+                    try (FileOutputStream streamToLogins = openFileOutput(USERS_FILE_NAME, MODE_PRIVATE);
 
-                        OutputStreamWriter writeToUsers = new OutputStreamWriter(streamToLogins);
+                         OutputStreamWriter writeToUsers = new OutputStreamWriter(streamToLogins);
 
-                        BufferedWriter bwUsers = new BufferedWriter(writeToUsers);
+                         BufferedWriter bwUsers = new BufferedWriter(writeToUsers)) {
+                        ;
 
                         bwUsers.write(user);
 
@@ -129,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private boolean findUser(BufferedReader brUsers,String inName,String inPassword){
+    private boolean findUser(BufferedReader brUsers, String inName, String inPassword) {
         String log = "";
         String pas = "";
         try {
@@ -141,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             return false;
-        }catch (IOException e){
+        } catch (IOException e) {
             Toast.makeText(getApplicationContext(), getString(R.string.fileEx),
                     Toast.LENGTH_LONG).show();
         }
